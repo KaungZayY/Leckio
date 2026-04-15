@@ -15,6 +15,7 @@ import type {
 } from "@/types/recipe";
 import { fetchRandomRecipes } from "@/services/themealdb";
 import { useEffect, useState } from "react";
+import { router } from "expo-router";
 
 export default function HomeScreen() {
   const [recipes, setRecipes] = useState<RecipeCardData[]>([]);
@@ -71,7 +72,7 @@ export default function HomeScreen() {
       <FlatList
         data={recipes}
         keyExtractor={(item) => item.idMeal}
-        renderItem={({ item }) => <RecipeCard recipe={item} />}
+        renderItem={({ item }) => <RecipeCard recipe={item} onPress={() => router.push(`/recipes/${item.idMeal}`)}/>}
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
         refreshControl={

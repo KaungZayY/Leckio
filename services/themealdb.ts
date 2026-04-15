@@ -23,7 +23,7 @@ export const fetchRandomRecipe = async (): Promise<Recipe> => {
 // one request per multiple random recipes is under damn paywall
 // make that damn list unique as well
 export const fetchRandomRecipes = async (
-  count: number = 5
+  count: number = 5,
 ): Promise<Recipe[]> => {
   const uniqueRecipes: Recipe[] = [];
   const seenIds = new Set<string>();
@@ -37,7 +37,7 @@ export const fetchRandomRecipes = async (
 
     // Fetch multiple recipes concurrently
     const batch = await Promise.all(
-      Array.from({ length: remaining }, () => fetchRandomRecipe())
+      Array.from({ length: remaining }, () => fetchRandomRecipe()),
     );
 
     for (const recipe of batch) {
@@ -51,4 +51,20 @@ export const fetchRandomRecipes = async (
   }
 
   return uniqueRecipes;
+};
+
+export const fetchRecipeById = async (id: number): Promise<Recipe> => {
+  const response = await fetch(`${BASE_URL}/lookup.php?i=${id}`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch recipe details");
+  }
+
+  const data: RecipeListResponse = await response.json();
+
+  if (!data.meals || data.meals.length === 0) {
+    throw new Error("Recipe not found");
+  }
+
+  return data.meals[0];
 };
