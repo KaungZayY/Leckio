@@ -12,6 +12,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { fetchRecipeById } from "@/services/themealdb";
 import type { Recipe } from "@/types/recipe";
 import Spinner from "@/components/general/Spinner";
+import { useFavorites } from "@/hooks/useFavorites";
+import FavoriteButton from "@/components/general/FavoriteButton";
 
 function RecipeDetailScreen() {
   const params = useLocalSearchParams();
@@ -19,6 +21,8 @@ function RecipeDetailScreen() {
 
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const { toggleFavorite, isFav } = useFavorites();
 
   const fetchData = async () => {
     try {
@@ -81,7 +85,13 @@ function RecipeDetailScreen() {
 
         {/* Content */}
         <View style={styles.content}>
-          <Text style={styles.title}>{recipe.strMeal}</Text>
+          <View style={styles.titleRow}>
+            <Text style={styles.title}>{recipe.strMeal}</Text>
+            <FavoriteButton
+              isFavorite={isFav(recipe.idMeal)}
+              onPress={() => toggleFavorite(recipe)}
+            />
+          </View>
 
           {/* Meta Info */}
           <View style={styles.metaRow}>
@@ -145,10 +155,16 @@ const styles = StyleSheet.create({
   content: {
     padding: 16,
   },
+  titleRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    marginBottom: 10,
+  },
   title: {
     fontSize: 26,
     fontWeight: "700",
-    marginBottom: 10,
+    flex: 1,
+    marginRight: 8,
     color: "#1F2933",
   },
   metaRow: {

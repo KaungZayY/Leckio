@@ -1,7 +1,9 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import type { Recipe } from "@/types/recipe.ts";
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import FavoriteButton from "./FavoriteButton";
+import { useFavorites } from "@/hooks/useFavorites";
 
 interface RecipeCardProps {
   recipe: RecipeCardData;
@@ -10,6 +12,9 @@ interface RecipeCardProps {
 
 function RecipeCard({ recipe, onPress }: RecipeCardProps) {
   const tags = recipe.strTags ? recipe.strTags.split(",").slice(0, 5) : [];
+
+  const { toggleFavorite, isFav } = useFavorites();
+
   return (
     <>
       <TouchableOpacity
@@ -26,10 +31,16 @@ function RecipeCard({ recipe, onPress }: RecipeCardProps) {
 
         {/* Content */}
         <View style={styles.content}>
-          {/* Title */}
-          <Text style={styles.title} numberOfLines={2}>
-            {recipe.strMeal}
-          </Text>
+          <View style={styles.titleRow}>
+            {/* Title */}
+            <Text style={styles.title} numberOfLines={2}>
+              {recipe.strMeal}
+            </Text>
+            <FavoriteButton
+              isFavorite={isFav(recipe.idMeal)}
+              onPress={() => toggleFavorite(recipe)}
+            />
+          </View>
 
           {/* Info Row */}
           <View style={styles.infoRow}>
@@ -89,11 +100,17 @@ const styles = StyleSheet.create({
   content: {
     padding: 14,
   },
+  titleRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    marginBottom: 6,
+  },
   title: {
+    flex: 1,
     fontSize: 18,
     fontWeight: "600",
     color: "#1F2933",
-    marginBottom: 6,
+    marginRight: 8,
   },
   infoRow: {
     flexDirection: "row",
