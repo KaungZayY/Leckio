@@ -1,9 +1,8 @@
-import React from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
-import type { Recipe } from "@/types/recipe.ts";
+import { useFavorites } from "@/context/useFavoritesContext";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import React from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import FavoriteButton from "./FavoriteButton";
-import { useFavorites } from "@/hooks/useFavorites";
 
 interface RecipeCardProps {
   recipe: RecipeCardData;

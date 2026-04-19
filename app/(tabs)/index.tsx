@@ -18,7 +18,7 @@ import { useEffect, useState } from "react";
 import { router } from "expo-router";
 
 export default function HomeScreen() {
-  const [recipes, setRecipes] = useState<RecipeCardData[]>([]);
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -28,15 +28,7 @@ export default function HomeScreen() {
     setError(null);
     try {
       const data: Recipe[] = await fetchRandomRecipes(10);
-      const formatted: RecipeCardData[] = data.map((recipe) => ({
-        idMeal: recipe.idMeal,
-        strMeal: recipe.strMeal,
-        strMealThumb: recipe.strMealThumb,
-        strArea: recipe.strArea,
-        strCategory: recipe.strCategory,
-        strTags: recipe.strTags,
-      }));
-      setRecipes(formatted);
+      setRecipes(data);
     } catch (error) {
       setError("Failed to fetch recipes. Please try again.");
       console.error(error);

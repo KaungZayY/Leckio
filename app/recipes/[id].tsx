@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  StyleSheet,
-  Linking,
-} from "react-native";
-import { useLocalSearchParams, Stack } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
+import FavoriteButton from "@/components/general/FavoriteButton";
+import Spinner from "@/components/general/Spinner";
+import { useFavorites } from "@/context/useFavoritesContext";
 import { fetchRecipeById } from "@/services/themealdb";
 import type { Recipe } from "@/types/recipe";
-import Spinner from "@/components/general/Spinner";
-import { useFavorites } from "@/hooks/useFavorites";
-import FavoriteButton from "@/components/general/FavoriteButton";
+import { Ionicons } from "@expo/vector-icons";
+import { Stack, useLocalSearchParams } from "expo-router";
+import React, { useEffect, useState } from "react";
+import {
+  Image,
+  Linking,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 function RecipeDetailScreen() {
   const params = useLocalSearchParams();

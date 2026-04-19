@@ -1,71 +1,32 @@
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  FlatList,
-  ActivityIndicator,
-  RefreshControl,
-  Text,
-} from "react-native";
-import { getAllFavorites } from "@/lib/favorites";
-import type { Recipe } from "@/types/recipe";
 import RecipeCard from "@/components/general/RecipeCard";
-import Spinner from "@/components/general/Spinner";
+import { useFavorites } from "@/context/useFavoritesContext";
 import { router } from "expo-router";
+import React from "react";
+import {
+  FlatList,
+  StyleSheet,
+  Text
+} from "react-native";
 
 export default function favourites() {
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [refreshing, setRefreshing] = useState<boolean>(false);
-
-  const fetchData = async () => {
-    try {
-      const data = await getAllFavorites();
-      setRecipes(data);
-    } catch (error) {
-      console.error("Failed to load favorites", error);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await fetchData();
-  };
-
-  if (loading && !refreshing) {
-    return <Spinner message="Loading favorites..." />;
-  }
+  const { favorites } = useFavorites();
 
   return (
-    <>
-      <FlatList
-        data={recipes}
-        keyExtractor={(item) => item.idMeal}
-        renderItem={({ item }) => (
-          <RecipeCard
-            recipe={item}
-            onPress={() => router.push(`/recipes/${item.idMeal}`)}
-          />
-        )}
-        contentContainerStyle={[
-          styles.container,
-          recipes.length === 0 && styles.emptyContainer,
-        ]}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-        ListEmptyComponent={
-          <Text style={styles.empty}>No favorites yet ❤️</Text>
-        }
-      />
-    </>
+    <FlatList
+      data={favorites}
+      keyExtractor={(item, index) => item.idMeal ?? index.toString()}
+      renderItem={({ item }) => (
+        <RecipeCard
+          recipe={item}
+          onPress={() => router.push(`/recipes/${item.idMeal}`)}
+        />
+      )}
+      contentContainerStyle={[
+        styles.container,
+        favorites.length === 0 && styles.emptyContainer,
+      ]}
+      ListEmptyComponent={<Text style={styles.empty}>No favorites yet ❤️</Text>}
+    />
   );
 }
 
