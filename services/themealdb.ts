@@ -68,3 +68,20 @@ export const fetchRecipeById = async (id: number): Promise<Recipe> => {
 
   return data.meals[0];
 };
+
+export const fetchRecipesByName = async (query: string): Promise<Recipe[]> => {
+  if (!query.trim()) return [];
+
+  const response = await fetch(
+    `${BASE_URL}/search.php?s=${encodeURIComponent(query)}`,
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to search recipes");
+  }
+
+  const data: RecipeListResponse = await response.json();
+
+  // API returns null if no results
+  return data.meals ?? [];
+};

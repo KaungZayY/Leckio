@@ -19,6 +19,7 @@ const MAPPING = {
   'heart.fill': 'favorite',
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',
+  'safari.fill': 'explore',
 } as IconMapping;
 
 /**
